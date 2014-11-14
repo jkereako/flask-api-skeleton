@@ -87,7 +87,7 @@ def not_found(error):
 @app.errorhandler(405)
 def not_found(error):
     """
-    Renders 404 response
+    Renders 405 response
     :returns: JSON
     :rtype: flask.Response
     """
