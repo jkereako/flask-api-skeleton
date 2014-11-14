@@ -95,8 +95,3 @@ def get_auth_token():
 @auth.login_required
 def get_resource():
     return jsonify({'data': 'Hello, %s!' % g.user.username})
-
-if __name__ == '__main__':
-    if not os.path.exists('db.sqlite'):
-        db.create_all()
-    app.run(debug=True)
