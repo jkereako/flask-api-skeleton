@@ -31,7 +31,7 @@ Then from a different terminal window you can send requests.
 
 The body must contain a JSON object that defines `username` and `password` fields.
 
-On success a status code `201` is returned. The body of the response contains a JSON object with the newly added user. A `Location` header contains the URI of the new user.
+On success a status code `201 (created)` is returned. The body of the response contains a JSON object with the newly added user. A `Location` header contains the URI of the new user.
 
 On failure status code `400 (bad request)` is returned.
 ###Notes:
@@ -42,7 +42,7 @@ On failure status code `400 (bad request)` is returned.
 - HTTP method: `GET`
 - URL path: `/api/user<int:id>`
 
-On success a status code `200` is returned. The body of the response contains a JSON object with the requested user.
+On success a status code `200 (OK)` is returned. The body of the response contains a JSON object with the requested user.
 
 On failure status code `400 (bad request)` is returned.
 
@@ -83,7 +83,7 @@ $ curl -i -X POST -H "Content-Type: application/json" -d '{"username":"miguel","
 ```
 These credentials can now be used to access protected resources:
 ```sh
-    $ curl -u miguel:python -i -X GET http://127.0.0.1:5000/api/resource
+    $ curl -u miguel:python -i -X GET http://localhost:5000/api/resource
     HTTP/1.0 200 OK
     Content-Type: application/json
     Content-Length: 30
@@ -96,7 +96,7 @@ These credentials can now be used to access protected resources:
 ```
 Using the wrong credentials the request is refused:
 ```sh
-    $ curl -u miguel:ruby -i -X GET http://127.0.0.1:5000/api/resource
+    $ curl -u miguel:ruby -i -X GET http://localhost:5000/api/resource
     HTTP/1.0 401 UNAUTHORIZED
     Content-Type: text/html; charset=utf-8
     Content-Length: 19
@@ -108,7 +108,7 @@ Using the wrong credentials the request is refused:
 ```
 Finally, to avoid sending username and password with every request an authentication token can be requested:
 ```sh
-$ curl -u miguel:python -i -X GET http://127.0.0.1:5000/api/token
+$ curl -u miguel:python -i -X GET http://localhost:5000/api/token
     HTTP/1.0 200 OK
     Content-Type: application/json
     Content-Length: 139
@@ -122,7 +122,7 @@ $ curl -u miguel:python -i -X GET http://127.0.0.1:5000/api/token
 ```
 And now during the token validity period there is no need to send username and password to authenticate anymore:
 ```sh
-$ curl -u eyJhbGciOiJIUzI1NiIsImV4cCI6MTM4NTY2OTY1NSwiaWF0IjoxMzg1NjY5MDU1fQ.eyJpZCI6MX0.XbOEFJkhjHJ5uRINh2JA1BPzXjSohKYDRT472wGOvjc:x -i -X GET http://127.0.0.1:5000/api/resource
+$ curl -u eyJhbGciOiJIUzI1NiIsImV4cCI6MTM4NTY2OTY1NSwiaWF0IjoxMzg1NjY5MDU1fQ.eyJpZCI6MX0.XbOEFJkhjHJ5uRINh2JA1BPzXjSohKYDRT472wGOvjc:x -i -X GET http://localhost:5000/api/resource
     HTTP/1.0 200 OK
     Content-Type: application/json
     Content-Length: 30
