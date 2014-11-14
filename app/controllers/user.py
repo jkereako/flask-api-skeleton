@@ -15,7 +15,7 @@ from app.utils import *
 from app.models.user import User
 from app import db, auth
 
-mod = Blueprint("api", __name__, url_prefix="/api")
+mod = Blueprint("user", __name__, url_prefix="/api")
 
 @mod.route("/users", methods=["GET"])
 def all():
@@ -44,24 +44,37 @@ def create():
     a_user.hash_password(password)
     db.session.add(a_user)
     db.session.commit()
-    return (jsonify({'username': a_user.username}), 201,
-            {'Location': url_for('single', id=a_user.id, _external=True)})
+
+    return jsonify(
+        prepare_json_response(
+            message="User created",
+            success=True,
+            data={"username": a_user.username}
+        )
+    ), 201, {"Location": url_for("user.single", id=a_user.id)}
 
 @mod.route("/users/<int:id>", methods=["GET"])
 def single(id):
     user = User.query.get(id)
     if not user:
         abort(400)
-    return jsonify({'username': user.username})
+
+    return jsonify(
+        prepare_json_response(
+            message="User found",
+            success=True,
+            data={"username": user.username}
+        )
+    )
 
 @mod.route("/resource")
 @auth.login_required
 def resource():
     return jsonify(
         prepare_json_response(
-            message="Hi there, %s!" % g.user.username,
+            message="Hi there, %s! This is a protected resource." % g.user.username,
             success=True,
-            data=None
+            data={"username": g.user.username}
         )
     )
 
