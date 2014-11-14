@@ -67,7 +67,7 @@ def single(id):
         )
     )
 
-@mod.route("/resource")
+@mod.route("/resource", methods=["GET"])
 @auth.login_required
 def resource():
     return jsonify(
