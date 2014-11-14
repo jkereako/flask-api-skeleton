@@ -54,11 +54,29 @@ def single(id):
         abort(400)
     return jsonify({'username': user.username})
 
+@mod.route("/resource")
+@auth.login_required
+def resource():
+    return jsonify(
+        prepare_json_response(
+            message="Hi there, %s!" % g.user.username,
+            success=True,
+            data=None
+        )
+    )
+
 @mod.route("/token", methods=["GET"])
 @auth.login_required
 def token():
     token = g.user.generate_auth_token(600)
-    return jsonify({"token": token.decode('ascii'), 'duration': 600})
+
+    return jsonify(
+        prepare_json_response(
+            message=None,
+            success=True,
+            data={"token": token.decode("ascii"), "duration":600}
+        )
+    )
 
 @auth.verify_password
 def verify_password(username_or_token, password):

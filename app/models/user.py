@@ -10,7 +10,8 @@
     :copyright: (c) 2014 by Alexis Digital
     :license: MIT, see LICENSE for more details
 """
-from app import db
+from app import app, db
+from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from passlib.apps import custom_app_context
 
 class User(db.Model):
