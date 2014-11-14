@@ -14,7 +14,19 @@
     :copyright: (c) 2014 by Alexis Digital
     :license: MIT, see LICENSE for more details
 """
-from app import app, cache
+from flask import request
+import app
+
+def prepare_json_response(success, message, data):
+    response = {"meta":{"success":success, "request":request.url}}
+    if data:
+        response["data"] = data
+        response["meta"]["count"] = len(data)
+
+    if message:
+        response["meta"]["message"] = message
+
+    return response
 
 def fetch_cached_data(args=None):
     """

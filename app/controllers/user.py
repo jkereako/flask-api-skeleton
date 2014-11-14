@@ -10,36 +10,51 @@
     :copyright: (c) 2014 by Alexis Digital
     :license: MIT, see LICENSE for more details
 """
-from flask import Blueprint, request, jsonify, g, url_for
-from app.utils import cache_data, fetch_cached_data
-from app.models import user
-from app import auth
+from flask import abort, Blueprint, request, jsonify, g, url_for
+from app.utils import *
+from app.models.user import User
+from app import db, auth
 
 mod = Blueprint("api", __name__, url_prefix="/api")
 
-@mod.route("users", methods=['POST'])
-def create_user():
-    username = request.json.get('username')
-    password = request.json.get('password')
+@mod.route("/users", methods=["GET"])
+def all():
+    return jsonify(
+        prepare_json_response(
+            message=None,
+            success=True,
+            data=[i.serialize for i in User.query.all()]
+        )
+    )
+
+@mod.route("/user", methods=["POST"])
+def create():
+    """
+    $ curl -i -X POST -H "Content-Type: application/json" -d '{"username":"user","password":"python"}' http://localhost:5000/api/user
+    """
+    username = request.json.get("username")
+    password = request.json.get("password")
     if username is None or password is None:
         abort(400)    # missing arguments
+
     if User.query.filter_by(username=username).first() is not None:
         abort(400)    # existing user
-    user = User(username=username)
-    user.hash_password(password)
-    db.session.add(user)
-    db.session.commit()
-    return (jsonify({'username': user.username}), 201,
-            {'Location': url_for('get_user', id=user.id, _external=True)})
 
-@mod.route("users/<int:id>")
-def user(id):
+    a_user = User(username=username)
+    a_user.hash_password(password)
+    db.session.add(a_user)
+    db.session.commit()
+    return (jsonify({'username': a_user.username}), 201,
+            {'Location': url_for('single', id=a_user.id, _external=True)})
+
+@mod.route("/users/<int:id>", methods=["GET"])
+def single(id):
     user = User.query.get(id)
     if not user:
         abort(400)
     return jsonify({'username': user.username})
 
-@mod.route("/token")
+@mod.route("/token", methods=["GET"])
 @auth.login_required
 def token():
     token = g.user.generate_auth_token(600)

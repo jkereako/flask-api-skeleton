@@ -11,7 +11,8 @@
     :license: MIT, see LICENSE for more details
 """
 import os
-from flask import Flask, jsonify
+from utils import prepare_json_response
+from flask import Flask, jsonify, request
 from werkzeug.contrib.cache import SimpleCache
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.httpauth import HTTPBasicAuth
@@ -22,48 +23,94 @@ cache = SimpleCache(__name__)
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
-if not os.path.exists("db.sqlite"):
-    db.create_all()
-
 app.config.from_object("config")
 
 #-- Models
 from app.models import user
 
-#-- Controllers
-from app.controllers import api
-# from app.controllers import private
+if not os.path.exists("db.sqlite"):
+    db.create_all()
 
-app.register_blueprint(api.mod)
-# app.register_blueprint(private.mod)
+#-- Controllers
+from app.controllers import user
+
+app.register_blueprint(user.mod)
 
 #-- Error handlers
-@app.errorhandler(403)
+
+# Override the default handlers with JSON responses
+@app.errorhandler(400)
 def forbidden(error):
     """
-    Renders 403 page
+    Renders 400 response
     :returns: JSON
     :rtype: flask.Response
     """
+    return jsonify(
+        prepare_json_response(
+            message="Error 400: Bad request",
+            success=False,
+            data=None
+        )
+    ), 400
 
-    return jsonify({"success":False, "message":"Error 403: Forbidden"}), 403
+@app.errorhandler(403)
+def forbidden(error):
+    """
+    Renders 403 response
+    :returns: JSON
+    :rtype: flask.Response
+    """
+    return jsonify(
+        prepare_json_response(
+            message="Error 403: Forbidden",
+            success=False,
+            data=None
+        )
+    ), 403
 
 @app.errorhandler(404)
 def not_found(error):
     """
-    Renders 404 page
+    Renders 404 response
     :returns: JSON
     :rtype: flask.Response
     """
+    return jsonify(
+        prepare_json_response(
+            message="Error 404: Not found",
+            success=False,
+            data=None
+        )
+    ), 404
 
-    return jsonify({"success":False, "message":"Error 404: Not found"}), 404
+@app.errorhandler(405)
+def not_found(error):
+    """
+    Renders 404 response
+    :returns: JSON
+    :rtype: flask.Response
+    """
+    return jsonify(
+        prepare_json_response(
+            message="Error 405: Method not allowed",
+            success=False,
+            data=None
+        )
+    ), 405
 
 @app.errorhandler(500)
 def internal_server_error(error):
     """
-    Renders 404 page
+    Renders 500 response
     :returns: JSON
     :rtype: flask.Response
     """
 
-    return jsonify({"success":False, "message":"Error 500: Internal server error"}), 500
+    return jsonify(
+        prepare_json_response(
+            message="Error 500: Internal server error",
+            success=False,
+            data=None
+        )
+    ), 405
