@@ -54,6 +54,21 @@ def forbidden(error):
         )
     ), 400
 
+@app.errorhandler(401)
+def forbidden(error):
+    """
+    Renders 400 response
+    :returns: JSON
+    :rtype: flask.Response
+    """
+    return jsonify(
+        prepare_json_response(
+            message="Error 401: Unauthorized",
+            success=False,
+            data=None
+        )
+    ), 401
+
 @app.errorhandler(403)
 def forbidden(error):
     """
