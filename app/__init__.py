@@ -32,8 +32,10 @@ if not os.path.exists("db.sqlite"):
     db.create_all()
 
 #-- Controllers
+from app.controllers import default
 from app.controllers import user
 
+app.register_blueprint(default.mod)
 app.register_blueprint(user.mod)
 
 #-- Error handlers

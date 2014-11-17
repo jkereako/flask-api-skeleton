@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    app.controllers.api
+    app.controllers.user
     ~~~~~~~~~~~~~~~
-    The controllers module.
+    The user controller module.
 
     :author: Jeff Kereakoglow
     :date: 2014-11-14
