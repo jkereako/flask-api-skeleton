@@ -137,7 +137,7 @@ Once the token expires it cannot be used anymore and the client needs to request
 
 An interesting side effect of this implementation is that it is possible to use an unexpired token as authentication to request a new token that extends the expiration time. This effectively allows the client to change from one token to the next and never need to send username and password after the initial token was obtained.
 
-##Change Log
+## Change Log
 **v0.3** - Return token duration.
 
 **v0.2** - Return a 201 status code and Location header from */api/users* endpoint.
