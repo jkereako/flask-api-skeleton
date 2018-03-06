@@ -1,7 +1,7 @@
-#flask-api-skeleton
+# Flask API Skeleton
 Companion application to my [RESTful Authentication with Flask](http://blog.miguelgrinberg.com/post/restful-authentication-with-flask) article.
 
-##Installation
+## Installation
 After cloning, create a virtual environment and install the requirements. For Linux and Mac users:
 
 ```sh
@@ -15,7 +15,7 @@ $ virtualenv venv
 $ venv\Scripts\activate
 (venv) $ pip install -r requirements.txt
 ```
-##Running
+## Running
 To run the server use the following command:
 ```sh
 (venv) $ python run.py
@@ -24,8 +24,8 @@ To run the server use the following command:
 ```
 Then from a different terminal window you can send requests.
 
-##API Documentation
-###Create new user
+## API Documentation
+### Create new user
 - HTTP method: `POST`
 - URL path: `/api/usr`
 
@@ -34,11 +34,11 @@ The body must contain a JSON object that defines `username` and `password` field
 On success a status code `201 (created)` is returned. The body of the response contains a JSON object with the newly added user. A `Location` header contains the URI of the new user.
 
 On failure status code `400 (bad request)` is returned.
-###Notes:
+### Notes:
 - The password is hashed before it is stored in the database. Once hashed, the original password is discarded.
 - In a production deployment secure HTTP must be used to protect the password in transit.
 
-###Get user
+### Get user
 - HTTP method: `GET`
 - URL path: `/api/user<int:id>`
 
@@ -46,7 +46,7 @@ On success a status code `200 (OK)` is returned. The body of the response contai
 
 On failure status code `400 (bad request)` is returned.
 
-###Get authentication token
+### Get authentication token
 - HTTP method: `GET`
 - URL path: `/api/token`
 
@@ -56,7 +56,7 @@ On success a JSON object is returned with a field `token` set to the authenticat
 
 On failure status code `401 (unauthorized)` is returned.
 
-###Get protected resource
+### Get protected resource
 - HTTP method: `GET`
 - URL path: `/api/resource`
  
